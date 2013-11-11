@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from string import strip
 
 import requests
 import pprint
@@ -15,7 +16,7 @@ examples = []
 for index, sample_section in enumerate(soup('div', class_='sample')):
     project = {}
     project['name'] = sample_section.a.string
-    project['desc'] = sample_section.a.parent.next_sibling
+    project['desc'] = (sample_section.a.parent.next_sibling).strip()
     project['zip'] = sample_section.a.get('href')
 
     doc = []
