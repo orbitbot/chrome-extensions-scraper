@@ -1,29 +1,37 @@
 from bs4 import BeautifulSoup
 
 import requests
+import pprint
 
-url = 'http://developer.chrome.com/extensions/samples.html'
+base_url = 'http://developer.chrome.com/extensions/'
+page_url = base_url + 'samples.html'
 
-r = requests.get(url)
+r = requests.get(page_url)
 
 soup = BeautifulSoup(r.text)
 
-examples = {}
+examples = []
 
-for sample_section in soup('div', class_='sample'):
-    project_name = sample_section.a.string
-    project_desc = sample_section.a.parent.next_sibling
-    zip_url = sample_section.a.get('href')
+for index, sample_section in enumerate(soup('div', class_='sample')):
+    project = {}
+    project['name'] = sample_section.a.string
+    project['desc'] = sample_section.a.parent.next_sibling
+    project['zip'] = sample_section.a.get('href')
+
+    doc = []
+    files = []
 
     links = sample_section('ul')
+    for index, item in enumerate(links[0].select('li code a')):
+        doc.append({'call': item.string,
+                    'link': item.get('href')})
 
-    print project_name
-    print project_desc.strip()
-    print zip_url
-    print 'calls'
-    for item in links[0].select('li code a'):
-        print item.get('href') + ' -- ' + item.string
+    for index, item in enumerate(links[1].select('li code a')):
+        files.append({'call': item.string,
+                      'link': item.get('href')})
+    project['doc'] = doc
+    project['files'] = files
 
-    print 'source files'
-    for item in links[1].select('li code a'):
-        print item.get('href') + ' -- ' + item.string
+    examples.append(project)
+
+pprint.pprint(examples[0])
