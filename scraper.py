@@ -63,7 +63,7 @@ readme_template = """
 
 %(desc)s
 
-[zipfile](http://developer.chrome.com/extensions/%(zip)s)
+[Zipfile](http://developer.chrome.com/extensions/%(zip)s)
 
 Content is licensed under the [Google BSD License](http://code.google.com/google_bsd_license.html).
 
@@ -107,7 +107,7 @@ for project in examples:
 
     shutil.rmtree(tmp_dir)
 
-    project['subfolder'] = project_path
+    project['subfolder'] = os.path.split(project_path)[1]
 
     bullets = []
     for item in project['doc']:
@@ -122,7 +122,7 @@ for project in examples:
 
 ## Write main readme with correct project subfolders
 
-project_list_template = '* <a href="%(subfolder)s">%(name)s</a>'
+project_list_template = '* [%(name)s](/%(subfolder)s/)'
 project_list = []
 
 for project in sorted(examples, key = itemgetter('name')):
@@ -141,7 +141,7 @@ If you would like to clone a part of this repository, use git
 [sparse checkouts](http://jasonkarns.com/blog/subdirectory-checkouts-with-git-sparse-checkout/).
 
 You can find the scraper used to generate this repository (except for a `git init` and push) 
-on (github](https://github.com/orbitbot/chrome-extension-scraper).
+on [github](https://github.com/orbitbot/chrome-extension-scraper).
 
 
 Content is licensed under the [Google BSD License](http://code.google.com/google_bsd_license.html).
