@@ -10,3 +10,6 @@ Developed on Python 2.7.5, compability not tested. Install the required librarie
 sudo pip install BeautifulSoup
 sudo pip install requests
 ```
+
+
+Results can be found at https://github.com/orbitbot/chrome-extensions-examples
