@@ -129,8 +129,8 @@ for project in sorted(examples, key = itemgetter('name')):
     project_list.append(project_list_template % project)
 
 main_readme = """
-chrome-extensions-example
-=========================
+chrome-extensions-examples
+==========================
 
 The [Chrome Extensions examples](http://developer.chrome.com/extensions/samples.html) did not 
 exist as a Git repository, and browsing both the samples page and the VCViewer did not seem particularly
