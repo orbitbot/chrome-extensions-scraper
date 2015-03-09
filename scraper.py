@@ -8,15 +8,16 @@ import shutil
 
 from bs4 import BeautifulSoup
 import requests
+from pprint import pprint
 
 
-base_url = 'http://developer.chrome.com/extensions/'
-page_url = base_url + 'samples.html'
+base_url = 'https://developer.chrome.com/extensions/'
+page_url = base_url + 'samples'
 
 
 ## Scrape data from Examples page
 
-r = requests.get(page_url)
+r = requests.get(page_url, verify=False)
 
 soup = BeautifulSoup(r.text)
 
@@ -28,7 +29,7 @@ for index, sample_section in enumerate(soup('div', class_='sample')):
     project['desc'] = (sample_section.a.parent.next_sibling).strip()
     zip_url = sample_section.a.get('href')
     project['zip'] = zip_url
-    project['folder'] = zip_url[ zip_url.rfind('/') + 1 : zip_url.rfind('.zip')]
+    project['folder'] = zip_url[zip_url.rfind('/') + 1: zip_url.rfind('.zip')]
 
     doc = []
     files = []
@@ -72,16 +73,22 @@ Calls
 
 """
 
-for project in examples:
+for index, project in enumerate(examples):
+    print project['name']
 
     project_path = os.path.join(subfolder, project['folder'])
-    
+
     tmp_dir = tempfile.mkdtemp()
 
-    r = requests.get(base_url + project['zip'])
+    r = requests.get(base_url + project['zip'], verify=False)
     if r.ok:
         z = zipfile.ZipFile(StringIO.StringIO(r.content))
         z.extractall(path=tmp_dir)
+    else:
+        if r.status_code == 500:
+            print '>> error downloading ' + base_url + project['zip']
+            del examples[index]
+            continue
 
     try:
         shutil.copytree(os.path.join(tmp_dir, project['folder']), project_path)
@@ -91,7 +98,7 @@ for project in examples:
             while True:
                 try:
                     tmp_path = project_path + '_' + str(num)
-                    print 'Got existing subfolder: "' + project_path + '", trying "' + tmp_path + ""
+                    print '>> Got existing subfolder: "' + project_path + '", trying "' + tmp_path + ""
                     shutil.copytree(os.path.join(tmp_dir, project['folder']), tmp_path)
                     project_path = tmp_path
                     break
@@ -125,22 +132,25 @@ for project in examples:
 project_list_template = '* [%(name)s](/%(subfolder)s/)'
 project_list = []
 
-for project in sorted(examples, key = itemgetter('name')):
-    project_list.append(project_list_template % project)
+for project in sorted(examples, key=itemgetter('name')):
+    try:
+        project_list.append(project_list_template % project)
+    except KeyError, e:
+        print '>> got keyerror creating link for '+ project['name']
 
 main_readme = """
 chrome-extensions-examples
 ==========================
 
-The [Chrome Extensions examples](http://developer.chrome.com/extensions/samples.html) did not 
+The [Chrome Extensions examples](http://developer.chrome.com/extensions/samples) did not
 exist as a Git repository, and browsing both the samples page and the VCViewer did not seem particularly
 handy. So, I decided to scrape the content into this repository for easier browsing and (possible)
 editing.
 
-If you would like to clone a part of this repository, use git 
+If you would like to clone a part of this repository, use git
 [sparse checkouts](http://jasonkarns.com/blog/subdirectory-checkouts-with-git-sparse-checkout/).
 
-You can find the scraper used to generate this repository (except for a `git init` and push) 
+You can find the scraper used to generate this repository (except for a `git init` and push)
 on [github](https://github.com/orbitbot/chrome-extension-scraper).
 
 
