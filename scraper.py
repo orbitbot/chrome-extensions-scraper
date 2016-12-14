@@ -139,6 +139,9 @@ for project in sorted(examples, key=itemgetter('name')):
         print '>> got keyerror creating link for '+ project['name']
 
 main_readme = """
+
+**This is not an official mirror of the Chrome extension examples. Report any issues with the examples themselves to Google's issue trackers/forums.**
+
 chrome-extensions-examples
 ==========================
 
