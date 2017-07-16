@@ -66,7 +66,7 @@ readme_template = """
 
 [Zipfile](http://developer.chrome.com/extensions/%(zip)s)
 
-Content is licensed under the [Google BSD License](http://code.google.com/google_bsd_license.html).
+Content is licensed under the [Google BSD License](https://developers.google.com/open-source/licenses/bsd).
 
 Calls
 -----
@@ -157,7 +157,7 @@ You can find the scraper used to generate this repository (except for a `git ini
 on [github](https://github.com/orbitbot/chrome-extension-scraper).
 
 
-Content is licensed under the [Google BSD License](http://code.google.com/google_bsd_license.html).
+Content is licensed under the [Google BSD License](https://developers.google.com/open-source/licenses/bsd).
 
 
 Example projects
